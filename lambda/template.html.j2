@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<title>Private EPL Contest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+th {
+  font-size: x-large;
+  text-align: left;
+  text-decoration: underline;
+  font-weight: bold;
+}
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+  background-image: url('/images/pinkEPL.jpg');
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+</style>
+<body>
+
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-large">
+    {{ timestamp }}
+  </div>
+  <div class="w3-display-middle">
+    <table>
+      <thead>
+        <tr><th>Player</th><th>Points</th></tr>
+      </thead>
+      <tbody>
+        {% for obj in standings: %}
+          <tr><td>{{ obj['player'] }}</td><td>{{ obj['points'] }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+  </div>
+  <div class="w3-display-bottomleft w3-padding-large">
+    Powered by <a href="https://github.com/ryanash999/epl_standings" target="_blank">Ash</a>
+  </div>
+</div>
+
+</body>
+</html>
