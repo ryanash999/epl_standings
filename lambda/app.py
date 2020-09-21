@@ -119,7 +119,7 @@ def get_api_data():
         SecretId=secret_name
     )
     secret = get_secret_value_response['SecretString']
-    secret_obj = json.load(secret)
+    secret_obj = json.loads(secret)
     print(f"api key: {secret}")
 
     standings = []
