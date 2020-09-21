@@ -1,4 +1,3 @@
-#import json
 import os
 import re
 import requests
@@ -46,6 +45,7 @@ API_TEAM_MAP = {
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 def lambda_handler(event, context):
     standings = get_api_data()
     player_data = get_s3_player_data()
@@ -65,8 +65,8 @@ def send_to_s3(points):
 
     with open("/tmp/index.html", "w") as result_file:
         result_file.write(
-                template.get_template("template.html.j2")
-                .render(render_vars))
+            template.get_template("template.html.j2")
+            .render(render_vars))
 
     s3 = boto3.resource('s3')
     s3.Bucket("smolich-epl").upload_file(
@@ -84,8 +84,7 @@ def calculate_points(standings, data):
     for obj in standings:
         for player in data:
             i = data[player].index(obj['name'])
-            #print (f"{obj['name']} - {i}")
-            p = abs(i-int(obj['rank']))
+            p = abs(i - int(obj['rank']))
             points[player] += int(p)
 
     for k, v in sorted(points.items(), key=lambda item: item[1]):
@@ -107,11 +106,24 @@ def validate(player_info):
 
 
 def get_api_data():
+
+    secret_name = "epl-rapid-api"
+    region_name = "us-east-1"
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+    get_secret_value_response = client.get_secret_value(
+        SecretId=secret_name
+    )
+    secret = get_secret_value_response['SecretString']
+
     standings = []
     url = "https://api-football-v1.p.rapidapi.com/v2/leagueTable/2790"
     headers = {
         'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
-        'x-rapidapi-key': "a4eb4c472cmshf493e8af833b91dp19da5ajsn295c912b4083"
+        'x-rapidapi-key': secret
     }
     response = requests.get(url, headers=headers).json()
 
@@ -152,7 +164,7 @@ def get_s3_player_data():
 
     for player_object in list_objects['Contents']:
         if not re.search(r'yaml', player_object['Key']):
-           continue
+            continue
 
         s3_result = s3_client.get_object(Bucket='smolich-epl', Key=player_object['Key'])
         s3_text = s3_result["Body"].read().decode()
