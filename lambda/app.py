@@ -118,12 +118,13 @@ def get_api_data():
         SecretId=secret_name
     )
     secret = get_secret_value_response['SecretString']
+    print(f"api key: {secret}")
 
     standings = []
     url = "https://api-football-v1.p.rapidapi.com/v2/leagueTable/2790"
     headers = {
         'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
-        'x-rapidapi-key': secret
+        'x-rapidapi-key': secret['rapidapi']
     }
     response = requests.get(url, headers=headers).json()
 
