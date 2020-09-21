@@ -130,6 +130,7 @@ def get_api_data():
     }
     response = requests.get(url, headers=headers).json()
 
+    print("API RESPONSE INFO")
     for obj in response['api']['standings'][0]:
         team_name = ""
 
@@ -140,7 +141,7 @@ def get_api_data():
         else:
             team_name = obj['teamName']
 
-        # print(f"{team_name} - rank={obj['rank']}")
+        print(f"{team_name} - rank={obj['rank']}")
 
         tmp = {
             "name": team_name,
